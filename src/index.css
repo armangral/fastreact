@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+@layer components {
+  .bg-brand-600 {
+    background-color: #4f46e5;
+  }
+
+  .bg-brand-700 {
+    background-color: #4338ca;
+  }
+}

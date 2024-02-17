@@ -29,6 +29,6 @@ lerna-debug.log*
 frontend/.env
 
 # Backend-specific
-backend/__pycache__
+backend/app/__pycache__
 backend/venv/
 backend/.env

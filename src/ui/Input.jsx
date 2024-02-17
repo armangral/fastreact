@@ -6,11 +6,6 @@ function Input({
   onChange,
   ...props
 }) {
-  const handleChange = (event) => {
-    if (onChange) {
-      onChange(event.target.value);
-    }
-  };
   return (
     <div>
       <div>
@@ -19,7 +14,7 @@ function Input({
           name={name}
           type={type}
           placeholder={placeholder}
-          onChange={handleChange}
+          onChange={onChange}
           {...props}
           className="
           w-full h-11 border rounded-md px-4 py-2 text-gray-800 focus:ring-1 focus:ring-blue-800 focus:outline-none

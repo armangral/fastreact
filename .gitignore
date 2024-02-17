@@ -1,3 +1,9 @@
+# Frontend-specific
+frontend/node_modules
+frontend/dist
+frontend/dist-ssr
+frontend/*.local
+
 # Logs
 logs
 *.log
@@ -6,11 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
-node_modules
-dist
-dist-ssr
-*.local
 
 # Editor directories and files
 .vscode/*
@@ -23,6 +24,11 @@ dist-ssr
 *.sln
 *.sw?
 
-
-# .env file
+# .env files
 .env
+frontend/.env
+
+# Backend-specific
+backend/__pycache__
+backend/venv/
+backend/.env

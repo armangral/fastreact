@@ -15,7 +15,9 @@ export async function login(data) {
         "Content-Type": "application/x-www-form-urlencoded",
       },
     });
-    console.log(response);
+    axios.defaults.headers.common["Authorization"] =
+      "Bearer " + response.data.access_token;
+    localStorage.setItem("token", response.data.access_token);
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -29,5 +31,27 @@ export async function login(data) {
       // Something happened in setting up the request that triggered an Error
       throw new Error("Error setting up the request");
     }
+  }
+}
+
+export async function getCurrentUser() {
+  try {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if (!token) {
+      throw new Error("No token found in local storage");
+    }
+
+    // Make a GET request to the backend endpoint
+    const response = await axios.get(`${BASE_URL}/api/user`, {
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+      },
+    });
+    return response.data; // Return the user data
+  } catch (error) {
+    // Handle errors, such as network errors or invalid tokens
+    console.error("Error fetching current user:", error);
+    throw error; // Propagate the error to the caller
   }
 }

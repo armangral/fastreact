@@ -10,10 +10,8 @@ export function useLogin() {
     mutationFn: (data) => loginApi(data),
     onSuccess: (user) => {
       //setting data manually in react query cache(user is complete session obj so we will do user.user to get user)
-      localStorage.setItem("token", user.access_token);
-      console.log(user);
       queryclient.setQueryData(["user"], user.user);
-      navigate("index", { replace: true });
+      navigate("/dashboard", { replace: true });
     },
     onError: (err) => {
       console.log("Error", err);

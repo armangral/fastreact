@@ -1,8 +1,10 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import Login from "./pages/Login";
+import ProtectedRoute from "./ui/ProtectedRoute";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,6 +23,10 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="login" element={<Login />} />
+          <Route element={<ProtectedRoute />}>
+            <Route index element={<Navigate replace to="dashboard" />} />
+            <Route path="dashboard" element={<Dashboard />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

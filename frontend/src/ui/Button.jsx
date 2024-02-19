@@ -9,7 +9,7 @@ const Button = ({ variation, size, children, ...props }) => {
   // Tailwind CSS classes for button variations
   const variationClasses = {
     primary: "text-white bg-brand-600 hover:bg-brand-700",
-    secondary: "text-gray-600 bg-gray-200 hover:bg-gray-300",
+    secondary: "text-white bg-green-600 hover:bg-green-700",
     danger: "text-white bg-red-600 hover:bg-red-700",
   };
 

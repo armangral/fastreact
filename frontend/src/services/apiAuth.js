@@ -45,7 +45,7 @@ export async function getCurrentUser() {
     // Make a GET request to the backend endpoint
     const response = await axios.get(`${BASE_URL}/api/user`, {
       headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+        Authorization: `Bearer ${token}`,
       },
     });
     return response.data; // Return the user data

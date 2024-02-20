@@ -5,6 +5,9 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from .. import database 
 from .. oauth2 import oauth2_scheme,verify_access_token
+from sqlalchemy import func
+
+
 
 router = APIRouter(tags=['Authentication'])
 
@@ -76,6 +79,28 @@ async def get_user_from_token(token: str = Depends(oauth2_scheme),db:Session = D
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error")
 
 
+@router.post("/create",status_code = status.HTTP_201_CREATED,response_model=schemas.Post)
+def create_posts(post:schemas.PostCreate,db:Session=Depends(database.get_db),current_user:int = Depends(oauth2.get_current_user)):
+    # cursor.execute(""" INSERT INTO posts(title,content,published) VALUES (%s,%s,%s) RETURNING * """
+    #                ,(post.title,post.content,post.published))
+    # #save it in new_post
+    # new_post = cursor.fetchone()
+    # #commit to save post in database
+    # conn.commit()
+    # new_post = models.Post(title = post.title, content = post.content,published = post.published)
+   
+    new_post = models.Post(owner_id = current_user.id,**post.dict())
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
+    return new_post
 
 
 
+
+
+@router.get("/all")
+def get_posts(db:Session=Depends(database.get_db),current_user:int = Depends(oauth2.get_current_user)):
+
+    posts = db.query(models.Post).filter(models.Post.owner_id == current_user.id).all()
+    return  posts

@@ -19,7 +19,7 @@ function PostsTable() {
       ) : (
         <Table
           data={posts}
-          headers={["Post Id", "Title", "Content", "Delete"]}
+          headers={["Post Id", "Title", "Content", "Delete", "Edit"]}
           isLoading={isLoading}
         />
       )}

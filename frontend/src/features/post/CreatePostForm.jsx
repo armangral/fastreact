@@ -1,32 +1,50 @@
+import React from "react";
 import { useForm } from "react-hook-form";
-
 import Input from "../../ui/Input";
-
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import TextArea from "../../ui/TextArea";
 import FormRow from "../../ui/FormRow";
-
 import { useCreatePost } from "./useCreatePost";
+import { useEditPost } from "./useEditPost";
 
-function CreatePostForm() {
+function CreatePostForm({ postToEdit = {}, onClose }) {
   const { isCreating, createPost } = useCreatePost();
+  const { isEditing, editPost } = useEditPost();
 
-  const isWorking = isCreating;
+  const isWorking = isCreating || isEditing;
+
+  const { id: editId, ...editValues } = postToEdit;
+  const isEditSession = Boolean(editId);
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: isEditSession ? editValues : {},
+  });
 
   function onSubmit(data) {
-    createPost(data, {
-      onSuccess: (data) => {
-        reset();
-      },
-    });
+    if (isEditSession) {
+      editPost(
+        { newPostData: data, id: editId },
+        {
+          onSuccess: () => {
+            reset();
+            onClose(); // Close the modal after successful edit
+          },
+        }
+      );
+    } else {
+      createPost(data, {
+        onSuccess: () => {
+          reset();
+          onClose(); // Close the modal after successful creation
+        },
+      });
+    }
   }
 
   function onError(errors) {
@@ -55,7 +73,14 @@ function CreatePostForm() {
       </FormRow>
 
       <FormRow>
-        <Button disabled={isWorking}>Create Post</Button>
+        <div className="flex justify-between">
+          <Button disabled={isWorking}>
+            {isEditSession ? "Edit Post" : "Create Post"}
+          </Button>
+          <Button onClick={onClose} disabled={isWorking} type="reset">
+            Cancel
+          </Button>
+        </div>
       </FormRow>
     </Form>
   );

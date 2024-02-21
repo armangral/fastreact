@@ -41,7 +41,6 @@ function CreatePostForm({ postToEdit = {}, onClose }) {
       createPost(data, {
         onSuccess: () => {
           reset();
-          onClose(); // Close the modal after successful creation
         },
       });
     }

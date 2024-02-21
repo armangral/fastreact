@@ -104,3 +104,24 @@ def get_posts(db:Session=Depends(database.get_db),current_user:int = Depends(oau
 
     posts = db.query(models.Post).filter(models.Post.owner_id == current_user.id).all()
     return  posts
+
+
+
+@router.delete("/post/{id}",status_code = status.HTTP_204_NO_CONTENT)
+def delete_post(id:int,db:Session=Depends(database.get_db),current_user:int = Depends(oauth2.get_current_user)):
+    #find index of specific post
+    # cursor.execute("""  DELETE FROM posts WHERE id =%s RETURNING *""",(str(id)))
+    # deleted_post = cursor.fetchone()
+    # conn.commit()
+    post_query = db.query(models.Post).filter(models.Post.id == id)
+    post = post_query.first()
+    if(post == None):
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND,detail = f"Post with id {id} not Found!")
+    if post.owner_id!=current_user.id:
+        raise HTTPException(status_code = status.HTTP_403_FORBIDDEN,detail = f"Not Authorized to perform this Action!")
+    # delete it from the array
+    # my_posts.pop(index)
+    #in 204 , no data is returned 
+    post_query.delete(synchronize_session=False)
+    db.commit()
+    return Response(status_code = status.HTTP_204_NO_CONTENT)

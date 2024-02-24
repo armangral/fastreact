@@ -1,15 +1,15 @@
 from .. import models,schemas,utils,oauth2
-from fastapi import FastAPI,Response,status,HTTPException,Depends,APIRouter
+from fastapi import FastAPI,Response,status,HTTPException,Depends,APIRouter, Query
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List, Optional
 from .. import database 
-from .. oauth2 import oauth2_scheme,verify_access_token
+from ..oauth2 import oauth2_scheme,verify_access_token
 from sqlalchemy import func
 
 
 
-router = APIRouter(tags=['Authentication'])
+router = APIRouter(tags=['Cruds'])
 
 @router.post("/login")
 async def login(user_credentials:OAuth2PasswordRequestForm = Depends(),db:Session = Depends(database.get_db)):
@@ -144,3 +144,17 @@ def update_post(id:int,updated_post:schemas.PostCreate,db:Session=Depends(databa
     post_query.update(updated_post.dict(),synchronize_session=False)
     db.commit()
     return post_query.first()
+
+
+
+PAGE_SIZE = 5  # Number of posts per page
+
+@router.get("/posts")
+def get_posts(page: int = Query(1, ge=1), db: Session = Depends(database.get_db),current_user:int = Depends(oauth2.get_current_user)):
+    from_index = (page - 1) * PAGE_SIZE
+    to_index = from_index + PAGE_SIZE
+    
+    posts = db.query(models.Post).filter(models.Post.owner_id == current_user.id).slice(from_index, to_index).all()
+    total_count = db.query(models.Post).filter(models.Post.owner_id == current_user.id).count()
+    
+    return {"data": posts, "count": total_count}

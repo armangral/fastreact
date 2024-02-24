@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from . import models
 from . database import engine
-from . routers import user,auth
+from . routers import cruds
 from fastapi.middleware.cors import CORSMiddleware
 
 # models.Base.metadata.create_all(bind =engine)
@@ -22,5 +22,4 @@ async def read_root():
     return {"Created by AbdulRehman"}
 
 
-app.include_router(auth.router)
-app.include_router(user.router)
+app.include_router(cruds.router)

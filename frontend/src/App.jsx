@@ -28,12 +28,12 @@ export default function App() {
         <Routes>
           <Route path="login" element={<Login />} />
           <Route path="*" element={<PageNotFound />} />
-          <Route path="posts" element={<Posts />} />
 
           <Route element={<ProtectedRoute />}>
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="post" element={<Post />} />
+            <Route path="posts" element={<Posts />} />
           </Route>
         </Routes>
       </BrowserRouter>
